@@ -12,63 +12,63 @@
 
 #include "get_next_line.h"
 
-char    *ft_free(char *str)
+char	*ft_free(char *str)
 {
-    free(str);
-    return (NULL);
+	free(str);
+	return (NULL);
 }
 
-char    *ft_save(char *save)
+char	*ft_save(char *save)
 {
-    char    *res;
-    int     len;
-    int     i;
+	char	*res;
+	int		len;
+	int		i;
 
-    i = 0;
-    while (save[i] && save[i] != '\n')
-        i++;
-    if (!save[i])
-        return (ft_free(save));
-    res = malloc(sizeof(char) * (ft_strlen(save) - i + 1));
-    if (!res)
-        return (ft_free(save));
-    len = 0;
-    i++;
-    while (save[i])
-        res[len++] = save[i++];
-    res[len] = '\0';
-    free(save);
-    return (res);
+	i = 0;
+	while (save[i] && save[i] != '\n')
+		i++;
+	if (!save[i])
+		return (ft_free(save));
+	res = malloc(sizeof(char) * (ft_strlen(save) - i + 1));
+	if (!res)
+		return (ft_free(save));
+	len = 0;
+	i++;
+	while (save[i])
+		res[len++] = save[i++];
+	res[len] = '\0';
+	free(save);
+	return (res);
 }
 
-char    *ft_read(int fd, char *save)
+char	*ft_read(int fd, char *save)
 {
-    char    *buff;
-    int     size_read;
+	char	*buff;
+	int		size_read;
 
-    size_read = 1;
-    buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-    if (!buff)
-        return (NULL);
-    while (!ft_strchr(save, '\n') && size_read != 0)
-    {
-        size_read = read(fd,buff,BUFFER_SIZE);
-        if (size_read == -1)
-        {
-            free(buff);
-            return (NULL);
-        }
-        buff[size_read] = '\0';
-        save = ft_strjoin(save, buff);
-    }
-    free(buff);
-    return (save);
+	size_read = 1;
+	buff = malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buff)
+		return (NULL);
+	while (!ft_strchr(save, '\n') && size_read != 0)
+	{
+		size_read = read(fd, buff, BUFFER_SIZE);
+		if (size_read == -1)
+		{
+			free(buff);
+			return (NULL);
+		}
+		buff[size_read] = '\0';
+		save = ft_strjoin(save, buff);
+	}
+	free(buff);
+	return (save);
 }
 
-char    *ft_get_line(char *save)
+char	*ft_get_line(char *save)
 {
-	int     i;
-	char    *res;
+	int		i;
+	char	*res;
 
 	i = 0;
 	if (!save[i])
@@ -88,14 +88,14 @@ char    *ft_get_line(char *save)
 		res[i++] = '\n';
 	res[i] = '\0';
 	return (res);
-
 }
 
-char    *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	static char *save;
-	static char    *line;
-	if (fd < 0 || BUFFER_SIZE  < 1)
+	static char	*save;
+	static char	*line;
+
+	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
 	save = ft_read(fd, save);
 	if (!save)
@@ -103,14 +103,14 @@ char    *get_next_line(int fd)
 	if (save[0] == '\n')
 	{
 		save = ft_save(save);
-		return (line);    
+		return (line);
 	}
 	line = ft_get_line(save);
 	save = ft_save(save);
 	return (line);
 }
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
 	(void)argc;
 	char *ar;
@@ -119,10 +119,6 @@ int main(int argc, char *argv[])
 		return (0);
 	ar = get_next_line(fd);
 	printf("1-%s",ar);
-	ar = get_next_line(fd);
-	printf("2-%s",ar);
-	ar = get_next_line(fd);
-	printf("3-%s",ar);
 	close(fd);
 	free(ar);
 	return (1);
